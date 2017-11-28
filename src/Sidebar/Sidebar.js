@@ -30,6 +30,7 @@ class PlantSidebar extends Component {
         <ItemGroup>
           <Item href="/" exact name="Overview" />
           <Item href="/visualizations" exact name="Visualizations" />
+          <Item href="/statistics" exact name="Statistics" />
         </ItemGroup>
         <div className="spacer" />
         <div className="header">Plants</div>

@@ -5,7 +5,7 @@ import PVPlant from "./PVPlant";
 import Visualization from "./Visualization";
 import Sidebar from "./Sidebar";
 import NotFound from "./NotFound";
-
+import Statistics from "./Statistics";
 import "./styles/light.css";
 import "./styles/fontawesome.css";
 import "./styles/datetime.css";
@@ -38,7 +38,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={PVSystem} />
             <Route exact path="/visualizations" component={Visualization} />
-
+            <Route exact path="/statistics" component={Statistics} />
             <Route
               path="/plants/:oid([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})"
               component={PVPlant}
@@ -48,9 +48,7 @@ class App extends Component {
               exact
               path="/plants/:not_uuid"
               render={({ match }) => (
-                <div className="content">
-                  {match.params.not_uuid} is not a valid uuid
-                </div>
+                <div className="content">{match.params.not_uuid} is not a valid uuid</div>
               )}
             />
 

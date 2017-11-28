@@ -1,5 +1,5 @@
 body {
-  font-family: Tahoma, Verdana, sans-serif;
+  font-family: "Roboto", sans-serif;
   margin: 0;
   background: #f7f7f7;
 }
@@ -640,8 +640,6 @@ body,
 }
 
 .content > .header {
-  font-family: Inconsolata;
-  font-family: SMA-Futura;
   text-align: center;
 }
 
@@ -704,8 +702,7 @@ body,
   list-style: none;
   font-size: 15px;
   cursor: pointer;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", Arial, sans-serif;
+  
 }
 
 .node .title {
@@ -751,8 +748,7 @@ body,
 }
 
 .sidebar > .header {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", Arial, sans-serif;
+  
   color: rgb(130, 130, 130);
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -799,8 +795,7 @@ body,
   margin-top: 20px;
   text-align: center;
 
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", Arial, sans-serif;
+  
   color: rgb(68, 68, 68);
   font-size: 11px;
   letter-spacing: 1px;
@@ -829,8 +824,7 @@ body,
 }
 
 svg text {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", Arial, sans-serif;
+  
   font-size: 11px;
 }
 
@@ -845,8 +839,7 @@ svg text {
 
 .control-group .control > select {
   background: white;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", Arial, sans-serif;
+  
   min-width: 60px;
   color: rgb(68, 68, 68);
   text-transform: uppercase;
@@ -953,13 +946,11 @@ svg text {
 
 .loading > .description {
   margin-top: 10px;
-  font-family: SMA-Futura;
   color: #5c6884;
 }
 
 .nav .item {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", Arial, sans-serif;
+  
   font-size: 12px;
   color: rgb(68, 68, 68);
   border: 1px solid #ececed;
