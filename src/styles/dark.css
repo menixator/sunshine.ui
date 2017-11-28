@@ -1,0 +1,316 @@
+
+body{margin: 0;}
+.plant-meters > .meters {
+  flex: 0 1 auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.plant-header > .title {
+  font-size: 50px;
+  text-align: center;
+  color: #ffffff;
+  font-family: BrandonBold;
+}
+
+.plant-header > .subtitle {
+  font-size: 16px;
+  font-family: BrandonLight;
+  text-align: center;
+  color: hsl(225, 17%, 55%);
+}
+
+.plant-container {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+
+  height: 100%;
+}
+
+.plant-header {
+  border-bottom: 1px solid #3f4554;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+
+  order: 1;
+  flex: 0 1 auto;
+  align-self: center;
+  min-width: auto;
+}
+
+.plant-meters {
+  padding-top: 40px;
+  order: 2;
+  flex: 1 1 auto;
+  align-self: auto;
+  min-width: 100%;
+  min-height: auto;
+
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  align-content: center;
+  justify-content: flex-start;
+}
+
+.plant-header .title {
+  font-size: 60px;
+  text-align: center;
+  color: white;
+  font-family: BrandonBold;
+}
+
+body {
+  font-family: BrandonRegular;
+}
+
+#root,
+body,
+html {
+  height: 100%;
+}
+
+.overview {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  height: 100%;
+}
+
+.overview-main {
+  height: 100%;
+  padding: 10px 25px 0px 25px;
+  box-sizing: border-box;
+  width: 450px;
+  border-left: 1px solid #3e4454;
+  background: #262a34;
+
+  /*flex child*/
+  order: 2;
+  flex: 1 1 auto;
+  align-self: auto;
+  min-width: 435px;
+  min-height: 100%;
+
+  /*flex parent*/
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+}
+
+.overview-sidebar-name {
+  font-family: BrandonMedium;
+  font-size: 20px;
+  text-align: center;
+}
+
+.mini-reading-container {
+  text-align: center;
+}
+
+.overview-sidebar-header {
+  font-size: 25px;
+  font-family: BrandonBold;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  padding-top: 10px;
+  background: #272a36;
+}
+
+.overview-sidebar-item-link {
+  display: block;
+  text-align: left;
+  padding: 7px;
+  background: hsla(228, 16%, 24%, 1);
+  border: 1px solid #414969;
+  margin: 20px;
+}
+
+.overview-sidebar-item-link,
+.overview-sidebar-item-link:visited {
+  color: white;
+  text-decoration: unset;
+}
+
+
+.overview-sidebar-plant-list {
+  order: 1;
+  flex: 0 1 auto;
+  align-self: auto;
+  min-width: 350px;
+  min-height: 100%;
+
+  background: #262a35;
+  border-right: 1px solid #3f4554;
+  margin-right: 10px;
+}
+
+.overview-main > .aggregation-header {
+  border-bottom: 1px solid #3f4554;
+  margin-bottom: 15px;
+
+  /*flex child*/
+  order: 1;
+  flex: 0 1 auto;
+  align-self: auto;
+  min-width: 100%;
+  min-height: 100px;
+}
+
+.aggregation-readings {
+  margin-top: 25px;
+  /*flex: child*/
+  order: 1;
+  flex: 1 1 auto;
+  align-self: auto;
+
+  /*flex: parent*/
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+}
+
+.meter {
+  background: #2f3442;
+  border: 1px solid #4b5163;
+  padding: 15px;
+  padding-bottom: 20px;
+  max-width: 520px;
+  min-width: 400px;
+}
+
+.mini-graphic {
+  width: 15px;
+  color: #6f7488;
+}
+
+.meter:not(:nth-child(1)) {
+  margin-top: 10px;
+}
+
+.loading {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column nowrap;
+}
+
+.loading .text {
+  color: #505c79;
+}
+
+.overview-main > .aggregation-header > .aggregation-header-title {
+  font-size: 50px;
+  text-align: center;
+  color: #ffffff;
+  font-family: BrandonBold;
+}
+
+.overview-main > .aggregation-header > .aggregation-header-subtitle {
+  font-size: 16px;
+  font-family: BrandonLight;
+  text-align: center;
+  color: hsl(225, 17%, 55%);
+}
+
+.meter > .heading {
+  font-size: 18px;
+  font-family: BrandonMedium;
+  color: white;
+}
+
+.meter > .reading,
+.meter > .footer {
+  text-align: center;
+}
+
+.meter > .reading > .unit {
+  font-size: 18px;
+  font-family: BrandonLight;
+  color: #8a90a0;
+}
+
+.meter > .reading > .value {
+  color: #00a8cc;
+  font-size: 52px;
+  font-family: BrandonMedium;
+}
+
+.meter > .footer {
+  text-align: center;
+  font-family: BrandonLight;
+  color: #99a8d2;
+}
+
+.meter > .footer > .subreading > .value {
+  color: rgba(59, 168, 204, 0.72);
+  font-family: BrandonMedium;
+}
+
+@font-face {
+  font-family: "BrandonBold";
+  src: url(/fonts/Brandon_bld.ttf) format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "BrandonLight";
+  src: url(/fonts/Brandon_light.ttf) format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "BrandonMedium";
+  src: url(/fonts/Brandon_med.ttf) format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "BrandonRegular";
+  src: url(/fonts/Brandon_reg.ttf) format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "BrandonThin";
+  src: url(/fonts/Brandon_thin.ttf) format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+body {
+  background: #1d2027;
+}
+
+.mini-reading {
+  font-size: 14px;
+}
+
+.mini-reading:not(:nth-child(1)) {
+  margin-left: 20px;
+}
+
+.mini-reading .reading .unit {
+  color: #858ca9;
+}
+
+.mini-reading .reading .value {
+  color: hsla(0, 0%, 100%, 0.74);
+  font-family: BrandonMedium;
+  color: #3ba8cc;
+}
+
