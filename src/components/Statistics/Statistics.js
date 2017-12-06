@@ -211,6 +211,7 @@ class Statistics extends React.Component {
   };
 
   componentWillMount() {
+    document.title = "Statistics | Sunshine";
     fetch("/api/plants")
       .then(res => res.json())
       .then(body => {

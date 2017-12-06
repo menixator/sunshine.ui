@@ -117,6 +117,8 @@ class Visualizations extends React.Component {
   };
 
   componentWillMount() {
+    document.title = "Visualizations | Sunshine";
+
     fetch("/api/plants")
       .then(res => res.json())
       .then(body => {

@@ -16,12 +16,7 @@ import Card, { CardHeader, CardContent } from "material-ui/Card";
 import { green, amber, teal, blueGrey } from "material-ui/colors";
 import websock from "../../sock.js";
 
-import Table, {
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "material-ui/Table";
+import Table, { TableBody, TableCell, TableHead, TableRow } from "material-ui/Table";
 
 import Graph from "./Graph";
 
@@ -124,6 +119,8 @@ class Dashboard extends React.Component {
   state = { data: null, sockId: websock.id };
 
   componentWillMount() {
+    document.title = "Dashboard | Sunshine";
+
     websock.on(DATA_EVENT, this.onEvent);
     websock.emit(SUBSCRIBE_EVENT);
   }
@@ -136,7 +133,6 @@ class Dashboard extends React.Component {
   }
 
   onEvent = data => {
-    console.log(data);
     this.setState({ data: data });
   };
 
