@@ -3,76 +3,182 @@ import PVSystem from "./PVSystem";
 import Loading from "./Loading";
 import PVPlant from "./PVPlant";
 import Visualization from "./Visualization";
-import Sidebar from "./Sidebar";
 import NotFound from "./NotFound";
 import Statistics from "./Statistics";
-import "./styles/light.css";
-import "./styles/fontawesome.css";
+// import "./styles/light.css";
+// import "./styles/fontawesome.css";
 import "./styles/datetime.css";
+
+import "./styles/base.css";
+
+import injectTapEventPlugin from "react-tap-event-plugin";
 
 import { Switch, Route } from "react-router-dom";
 
 import websock from "./sock.js";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { connected: false, lostConnection: false };
+import Sidebar, { DRAWERWIDTH as drawerWidth } from "./components/Sidebar";
 
-    websock.on("connect", () =>
-      this.setState({ connected: true, lostConnection: false })
-    );
+import PropTypes from "prop-types";
+import { withStyles } from "material-ui/styles";
+import classNames from "classnames";
+import AppBar from "material-ui/AppBar";
+import Toolbar from "material-ui/Toolbar";
+import { MenuItem } from "material-ui/Menu";
+import Typography from "material-ui/Typography";
+import TextField from "material-ui/TextField";
+import IconButton from "material-ui/IconButton";
+import MenuIcon from "material-ui-icons/Menu";
+
+import InitialConnect from "./components/InitialConnect";
+
+import AppRoutes from "./AppRoutes";
+
+injectTapEventPlugin();
+
+const styles = theme => ({
+  root: {
+    width: "100%",
+    height: "100%",
+    zIndex: 1,
+    overflow: "hidden"
+  },
+  appCradle: {
+    position: "relative",
+    display: "flex",
+    width: "100%",
+    height: "100%"
+  },
+  appBar: {
+    position: "absolute",
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    })
+  },
+  appBarShift: {
+    // width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  "appBarShift-left": {
+    marginLeft: drawerWidth
+  },
+
+  menuButton: {
+    marginLeft: 12,
+    marginRight: 20
+  },
+  hide: {
+    display: "none"
+  },
+  content: {
+    overflow: "auto",
+    width: "100%",
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing.unit * 3,
+    boxSizing: "border-box",
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    }),
+    // height: "calc(100% - 56px)",
+    marginTop: 64,
+    [theme.breakpoints.up("sm")]: {
+      content: {
+        // height: "calc(100% - 64px)",
+        marginTop: 64
+      }
+    }
+  },
+  "content-left": {
+    marginLeft: -drawerWidth
+  },
+  contentShift: {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  "contentShift-left": {
+    marginLeft: 0
+  }
+});
+
+class App extends React.Component {
+  state = {
+    open: true,
+    connected: false,
+    lostConnection: false
+  };
+
+  componentWillMount() {
+    websock.on("connect", () => {
+      this.setState({ connected: true, lostConnection: false });
+    });
     websock.on("disconnect", () =>
       this.setState({ connected: false, lostConnection: true })
     );
   }
 
+  handleDrawerOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleDrawerClose = () => {
+    this.setState({ open: false });
+  };
+
   render() {
-    let connected = this.state.connected;
-    let lostConnection = this.state.lostConnection;
-
-    if (connected) {
-      return (
-        <div className="page">
-          <Sidebar />
-          <Switch>
-            <Route exact path="/" component={PVSystem} />
-            <Route exact path="/visualizations" component={Visualization} />
-            <Route exact path="/statistics" component={Statistics} />
-            <Route
-              path="/plants/:oid([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})"
-              component={PVPlant}
-            />
-
-            <Route
-              exact
-              path="/plants/:not_uuid"
-              render={({ match }) => (
-                <div className="content">{match.params.not_uuid} is not a valid uuid</div>
-              )}
-            />
-
-            <Route match="*" component={NotFound} />
-          </Switch>
-        </div>
-      );
-    }
-
-    if (lostConnection) {
-      return (
-        <div className="page">
-          <Loading text="Lost connection. Trying to reconnect" />
-        </div>
-      );
-    }
-
-    // First connection
+    let { classes, theme } = this.props;
+    let { open, connected } = this.state;
     return (
-      <div className="page">
-        <Loading text="Connecting to the Server" />
+      <div className={classes.root}>
+        <div className={classes.appCradle}>
+          <AppBar
+            className={classNames(classes.appBar, {
+              [classes.appBarShift]: open,
+              [classes[`appBarShift-left`]]: open
+            })}
+          >
+            <Toolbar disableGutters={!open}>
+              <IconButton
+                color="contrast"
+                aria-label="open drawer"
+                onClick={this.handleDrawerOpen}
+                className={classNames(classes.menuButton, open && classes.hide)}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography type="title" color="inherit" noWrap>
+                Sunshine
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <Sidebar
+            open={this.state.connected && this.state.open}
+            handleDrawerClose={this.handleDrawerClose}
+          />
+          <main
+            className={classNames(classes.content, classes[`content-left`], {
+              [classes.contentShift]: open,
+              [classes[`contentShift-left`]]: open
+            })}
+          >
+            {connected ? AppRoutes : <InitialConnect />}
+          </main>
+        </div>
       </div>
     );
   }
 }
 
-export default App;
+App.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired
+};
+
+export default withStyles(styles, { withTheme: true })(App);
