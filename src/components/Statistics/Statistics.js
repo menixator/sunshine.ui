@@ -179,7 +179,6 @@ class Statistics extends React.Component {
       link.setAttribute("href", encodedUri);
       link.style.display = "none";
 
-
       let fileName = `${this.state.plants.length !== 1
         ? "Dhiraagu PV Systems"
         : this.state.tableData.plants.get(this.state.plants[0]).name} -`;
@@ -342,6 +341,8 @@ class Statistics extends React.Component {
                   input={<Input name="type" id="type" />}
                 >
                   <MenuItem value="power">Power</MenuItem>
+                  <MenuItem value="energy">Energy</MenuItem>
+
                   <MenuItem value="co2-avoided">Carbon Avoided</MenuItem>
                   <MenuItem value="revenue">Reimbursement</MenuItem>
                 </Select>

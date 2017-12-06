@@ -15,10 +15,14 @@ import {
 import * as colors from "material-ui/colors";
 
 delete colors.black;
-
-const COLORS = [colors.red[500], colors.blue[500], colors.green[400], colors.purple[500]];
-
-
+const COLORS = [
+  colors.red[500],
+  colors.blue[500],
+  colors.green[400],
+  colors.purple[500],
+  colors.yellow[300],
+  colors.orange[500]
+];
 class CustomTooltip extends React.Component {
   propTypes: {
     type: PropTypes.string,
