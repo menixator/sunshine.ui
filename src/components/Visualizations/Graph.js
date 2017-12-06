@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Paper, { PaperContent } from "material-ui/Paper";
+import Paper from "material-ui/Paper";
 
 import moment from "moment";
 import {
@@ -51,6 +51,8 @@ class CustomTooltip extends React.Component {
         return "Do MMMM YYYY";
       case "year":
         return "MMMM YYYY";
+      default:
+        throw new Error("Unexpected case");
     }
   }
 
@@ -133,6 +135,8 @@ class Graph extends React.Component {
         return "DD/MM/YYYY";
       case "year":
         return "MMMM YYYY";
+      default:
+        throw new Error("Unexpected case");
     }
   }
 
@@ -141,7 +145,7 @@ class Graph extends React.Component {
   };
 
   render() {
-    let { props, state } = this;
+    let { props } = this;
 
     let { data, params, classes } = props;
 
@@ -170,7 +174,10 @@ class Graph extends React.Component {
     return (
       <Paper className={classes.root} square>
         <ResponsiveContainer>
-          <BarChart data={tableData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
+          <BarChart
+            data={tableData}
+            margin={{ top: 40, right: 30, left: 10, bottom: 20 }}
+          >
             <XAxis
               dataKey="timestamp"
               tickLine={false}

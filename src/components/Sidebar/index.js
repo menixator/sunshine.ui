@@ -18,25 +18,27 @@ import InformationIcon from "material-ui-icons/Info";
 
 import VisualizationsIcon from "material-ui-icons/Visibility";
 
-import Typography from "material-ui/Typography";
-
 // Drawer's width
 export const DRAWERWIDTH = 256;
 
-const styles = theme => ({
-  drawerPaper: {
-    position: "relative",
-    height: "100%",
-    width: DRAWERWIDTH
-  },
-  drawerHeader: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: "0 8px",
-    ...theme.mixins.toolbar
-  }
-});
+const styles = theme => {
+  console.log(theme)
+
+  return {
+    drawerPaper: {
+      position: "relative",
+      height: "100%",
+      width: DRAWERWIDTH
+    },
+    drawerHeader: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      padding: "0 8px",
+      ...theme.mixins.toolbar
+    }
+  };
+};
 
 class Sidebar extends React.Component {
   state = { plants: [] };
@@ -44,7 +46,7 @@ class Sidebar extends React.Component {
   fetch() {
     fetch("/api/plants")
       .then(res => res.json())
-      .then(({payload}) => {
+      .then(({ payload }) => {
         this.setState({ plants: payload });
       });
   }
@@ -54,7 +56,7 @@ class Sidebar extends React.Component {
   }
 
   render() {
-    let { classes, theme, open, handleDrawerClose } = this.props;
+    let { classes, open, handleDrawerClose } = this.props;
     let { plants } = this.state;
     return (
       <Drawer
@@ -109,7 +111,9 @@ class Sidebar extends React.Component {
                   <ListItemIcon>
                     <LabelIcon />
                   </ListItemIcon>
-                  <ListItemText primary={plant.name.replace(/dhiraagu\s*,\s*/ig, '').trim()} />
+                  <ListItemText
+                    primary={plant.name.replace(/dhiraagu\s*,\s*/gi, "").trim()}
+                  />
                 </ListItem>
               ))}
             </div>

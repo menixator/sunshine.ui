@@ -13,10 +13,9 @@ import Paper from "material-ui/Paper";
 
 import Repository from "../../utils/Repository";
 
-import Button from "material-ui/Button";
 import Input, { InputLabel } from "material-ui/Input";
 import { MenuItem } from "material-ui/Menu";
-import { FormControl, FormHelperText } from "material-ui/Form";
+import { FormControl } from "material-ui/Form";
 import Grid from "material-ui/Grid";
 import Select from "material-ui/Select";
 
@@ -72,6 +71,8 @@ function getTimestampFormat(type, interval) {
       return "DD/MM/YYYY";
     case "year":
       return "MMMM YYYY";
+    default:
+      throw new Error("Unexpected case");
   }
 }
 
@@ -83,6 +84,9 @@ function getTableHeader(type, interval) {
 
     case "year":
       return ["Month", "(YYYY)"];
+
+    default:
+      throw new Error("Unexpected case");
   }
 }
 
@@ -147,7 +151,6 @@ class Statistics extends React.Component {
         ],
         ...Array.from(tableData.dataPool.entries())
           .map(([timestamp, row]) => {
-            let formattedTimestamp = moment(timestamp).format(tsFormat);
             return [
               moment(timestamp).format(tsFormat),
               ...Array.from(tableData.plants.entries()).map(([oid, plant]) => {
@@ -226,7 +229,6 @@ class Statistics extends React.Component {
     "power"
       ? "&interval=" + this.state.interval
       : ""}`;
-    let url = `${route}`;
     fetch(route)
       .then(res => res.json())
       .then(body => {
@@ -266,7 +268,6 @@ class Statistics extends React.Component {
             </TableHead>
             <TableBody>
               {Array.from(tableData.dataPool.entries()).map(([timestamp, row]) => {
-                let formattedTimestamp = moment(timestamp).format(tsFormat);
                 return (
                   <TableRow key={timestamp}>
                     <TableCell>{moment(timestamp).format(tsFormat)}</TableCell>

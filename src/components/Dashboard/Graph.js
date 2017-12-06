@@ -107,7 +107,7 @@ class PowerChart extends React.Component {
   };
 
   render() {
-    let { props, state } = this;
+    let {  state } = this;
 
     let { data } = state;
 

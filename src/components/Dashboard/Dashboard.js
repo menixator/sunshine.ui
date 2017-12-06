@@ -11,9 +11,9 @@ import RevenueIcon from "material-ui-icons/MonetizationOn";
 import Typography from "material-ui/Typography";
 import classNames from "classnames";
 
-import Card, { CardHeader, CardMedia, CardContent, CardActions } from "material-ui/Card";
+import Card, { CardHeader, CardContent } from "material-ui/Card";
 
-import { red, green, amber, teal, blueGrey } from "material-ui/colors";
+import { green, amber, teal, blueGrey } from "material-ui/colors";
 import websock from "../../sock.js";
 
 import Table, {
@@ -21,7 +21,6 @@ import Table, {
   TableCell,
   TableHead,
   TableRow,
-  TableFooter
 } from "material-ui/Table";
 
 import Graph from "./Graph";
@@ -243,7 +242,7 @@ class Dashboard extends React.Component {
               <CardHeader title="Today's Graph" />
               <CardContent>
                 <div className={classes.graph}>
-                  <Graph timestamp={payload.timestamp}/>
+                  <Graph timestamp={payload.timestamp} />
                 </div>
               </CardContent>
             </Card>

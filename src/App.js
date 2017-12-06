@@ -1,19 +1,8 @@
-import React, { Component } from "react";
-import PVSystem from "./PVSystem";
-import Loading from "./Loading";
-import PVPlant from "./PVPlant";
-import Visualization from "./Visualization";
-import NotFound from "./NotFound";
-import Statistics from "./Statistics";
-// import "./styles/light.css";
-// import "./styles/fontawesome.css";
-import "./styles/datetime.css";
+import React from "react";
 
 import "./styles/base.css";
 
 import injectTapEventPlugin from "react-tap-event-plugin";
-
-import { Switch, Route } from "react-router-dom";
 
 import websock from "./sock.js";
 
@@ -24,9 +13,7 @@ import { withStyles } from "material-ui/styles";
 import classNames from "classnames";
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
-import { MenuItem } from "material-ui/Menu";
 import Typography from "material-ui/Typography";
-import TextField from "material-ui/TextField";
 import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
 
@@ -133,7 +120,7 @@ class App extends React.Component {
   };
 
   render() {
-    let { classes, theme } = this.props;
+    let { classes } = this.props;
     let { open, connected } = this.state;
     return (
       <div className={classes.root}>
