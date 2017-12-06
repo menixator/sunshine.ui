@@ -15,7 +15,6 @@ import { MenuItem as ListItem } from "material-ui/Menu";
 import DashboardIcon from "material-ui-icons/Dashboard";
 import ChartIcon from "material-ui-icons/InsertChart";
 import LabelIcon from "material-ui-icons/Label";
-import AboutIcon from "material-ui-icons/Info";
 
 import VisualizationsIcon from "material-ui-icons/Visibility";
 
@@ -84,7 +83,6 @@ class Sidebar extends React.Component {
                 primary="Visualizations"
                 icon={<VisualizationsIcon />}
               />
-              <Item path="/about" primary="About" icon={<AboutIcon />} />
             </div>
           </List>
           <Divider />
