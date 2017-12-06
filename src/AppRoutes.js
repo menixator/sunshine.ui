@@ -11,9 +11,8 @@ export default (
     <Route exact path="/" component={Dashboard} />
     <Route exact path="/statistics" component={Statistics} />
     <Route exact path="/visualizations" component={Visualizations} />
-
     <Route>
-      <Redirect to="/" />
+      <Redirect to="/" replace />
     </Route>
   </Switch>
 );
