@@ -8,22 +8,23 @@ import ChevronLeftIcon from "material-ui-icons/ChevronLeft";
 import Divider from "material-ui/Divider";
 import List from "material-ui/List";
 
-import { ListItem, ListItemIcon, ListItemText, ListSubheader } from "material-ui/List";
+import { ListItemIcon, ListItemText, ListSubheader } from "material-ui/List";
+import { MenuItem as ListItem } from "material-ui/Menu";
 
 // ICONS
 import DashboardIcon from "material-ui-icons/Dashboard";
 import ChartIcon from "material-ui-icons/InsertChart";
 import LabelIcon from "material-ui-icons/Label";
-import InformationIcon from "material-ui-icons/Info";
+import AboutIcon from "material-ui-icons/Info";
 
 import VisualizationsIcon from "material-ui-icons/Visibility";
+
+import Item from "./Item";
 
 // Drawer's width
 export const DRAWERWIDTH = 256;
 
 const styles = theme => {
-  console.log(theme)
-
   return {
     drawerPaper: {
       position: "relative",
@@ -76,30 +77,14 @@ class Sidebar extends React.Component {
           <Divider />
           <List className={classes.list}>
             <div>
-              <ListItem button>
-                <ListItemIcon>
-                  <DashboardIcon />
-                </ListItemIcon>
-                <ListItemText primary="Dashboard" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <ChartIcon />
-                </ListItemIcon>
-                <ListItemText primary="Statistics" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <VisualizationsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Visualizations" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <InformationIcon />
-                </ListItemIcon>
-                <ListItemText primary="About" />
-              </ListItem>
+              <Item path="/" primary="Dashboard" icon={<DashboardIcon />} />
+              <Item path="/statistics" primary="Statistics" icon={<ChartIcon />} />
+              <Item
+                path="/visualizations"
+                primary="Visualizations"
+                icon={<VisualizationsIcon />}
+              />
+              <Item path="/about" primary="About" icon={<AboutIcon />} />
             </div>
           </List>
           <Divider />
