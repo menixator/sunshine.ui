@@ -6,10 +6,7 @@ import Drawer from "material-ui/Drawer";
 import IconButton from "material-ui/IconButton";
 import ChevronLeftIcon from "material-ui-icons/ChevronLeft";
 import Divider from "material-ui/Divider";
-import List from "material-ui/List";
-
-import { ListItemIcon, ListItemText, ListSubheader } from "material-ui/List";
-import { MenuItem as ListItem } from "material-ui/Menu";
+import List, { ListSubheader } from "material-ui/List";
 
 // ICONS
 import DashboardIcon from "material-ui-icons/Dashboard";
@@ -90,14 +87,12 @@ class Sidebar extends React.Component {
             <div>
               <ListSubheader>Plants</ListSubheader>
               {plants.map(plant => (
-                <ListItem button key={plant.oid}>
-                  <ListItemIcon>
-                    <LabelIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={plant.name.replace(/dhiraagu\s*,\s*/gi, "").trim()}
-                  />
-                </ListItem>
+                <Item
+                  key={plant.oid}
+                  path={`/plants/${plant.oid}`}
+                  primary={plant.name.replace(/dhiraagu\s*,\s*/gi, "").trim()}
+                  icon={<LabelIcon />}
+                />
               ))}
             </div>
           </List>
