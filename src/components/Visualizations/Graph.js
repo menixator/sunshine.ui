@@ -58,7 +58,7 @@ class CustomTooltip extends React.Component {
 
   render() {
     const { active } = this.props;
-    if (!active || this.props.payload.length === 0) {
+    if (!active || this.props.payload === null) {
       return null;
     }
 
@@ -149,6 +149,11 @@ class Graph extends React.Component {
 
     let { data, params, classes } = props;
 
+    if (data.dataPool.size === 0){
+      return null;
+
+    }
+    
     let tableData = Array.from(data.dataPool.entries()).map(([timestamp, readings]) => {
       return {
         timestamp,
@@ -158,6 +163,7 @@ class Graph extends React.Component {
         }, {})
       };
     });
+
 
     let dataStartedToBeSignificant = false;
 
