@@ -72,104 +72,66 @@ class PlantList extends React.Component {
     let yesterday = moment().subtract(moment.duration(1, "day"));
 
     return (
-      <Paper className={classes.tableRoot}>
-        <Table className={classes.TableRoot}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Plant Name</TableCell>
-              <TableCell>PeakPower [kWp]</TableCell>
-              <TableCell>Today's Yield [kWh] {today.format("DD/MM/YYYY")}</TableCell>
-              <TableCell>
-                Yesterday's Yield [kWh] {yesterday.format("DD/MM/YYYY")}
-              </TableCell>
-              <TableCell>This Month's Yield [kWh] {today.format("MMMM YYYY")}</TableCell>
-              <TableCell>Absolute Yield [kWh]</TableCell>
-              <TableCell>
-                Monthly Specific Yield [kWp/kWh] {today.format("MMMM YYYY")}
-              </TableCell>
-              <TableCell>
-                Yearly Specific Yield [kWp/kWh] {today.format("YYYY")}
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tableData.rows.map(row => (
-              <TableRow key={row.oid}>
+      <div>
+        <Paper className={classes.tableRoot}>
+          <Table className={classes.TableRoot}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Plant Name</TableCell>
+                <TableCell>PeakPower [kWp]</TableCell>
+                <TableCell>Today's Yield [kWh] {today.format("DD/MM/YYYY")}</TableCell>
                 <TableCell>
-                  {row.name
-                    .replace(/dhiraagu\s*,\s*/gi, "")
-                    .replace(/syst\.?\s*(\d+)/gi, "#$1")
-                    .trim()}
+                  Yesterday's Yield [kWh] {yesterday.format("DD/MM/YYYY")}
                 </TableCell>
-                <TableCell>{row.peakPower.value.toFixed(2)}</TableCell>
-                <TableCell>{row.yield.today.value.toFixed(2)}</TableCell>
-                <TableCell>{row.yield.yesterday.value.toFixed(2)}</TableCell>
-                <TableCell>{row.yield.month.value.toFixed(2)}</TableCell>
-                <TableCell>{row.yield.total.value.toFixed(2)}</TableCell>
-                <TableCell>{row.specificYield.month.value.toFixed(2)}</TableCell>
-                <TableCell>{row.specificYield.year.value.toFixed(2)}</TableCell>
+                <TableCell>
+                  This Month's Yield [kWh] {today.format("MMMM YYYY")}
+                </TableCell>
+                <TableCell>Absolute Yield [kWh]</TableCell>
+                <TableCell>
+                  Monthly Specific Yield [kWp/kWh] {today.format("MMMM YYYY")}
+                </TableCell>
+                <TableCell>
+                  Yearly Specific Yield [kWp/kWh] {today.format("YYYY")}
+                </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Paper>
+            </TableHead>
+            <TableBody>
+              {tableData.rows.map(row => (
+                <TableRow key={row.oid}>
+                  <TableCell>
+                    {row.name
+                      .replace(/dhiraagu\s*,\s*/gi, "")
+                      .replace(/syst\.?\s*(\d+)/gi, "#$1")
+                      .trim()}
+                  </TableCell>
+                  <TableCell>{row.peakPower.value.toFixed(2)}</TableCell>
+                  <TableCell>{row.yield.today.value.toFixed(2)}</TableCell>
+                  <TableCell>{row.yield.yesterday.value.toFixed(2)}</TableCell>
+                  <TableCell>{row.yield.month.value.toFixed(2)}</TableCell>
+                  <TableCell>{row.yield.total.value.toFixed(2)}</TableCell>
+                  <TableCell>{row.specificYield.month.value.toFixed(2)}</TableCell>
+                  <TableCell>{row.specificYield.year.value.toFixed(2)}</TableCell>
+                </TableRow>
+              ))}
+              <TableRow>
+                <TableCell>Total</TableCell>
+                <TableCell>{tableData.total.peakPower.value.toFixed(2)}</TableCell>
+                <TableCell>{tableData.total.yield.today.value.toFixed(2)}</TableCell>
+                <TableCell>{tableData.total.yield.yesterday.value.toFixed(2)}</TableCell>
+                <TableCell>{tableData.total.yield.month.value.toFixed(2)}</TableCell>
+                <TableCell>{tableData.total.yield.total.value.toFixed(2)}</TableCell>
+                <TableCell>
+                  {tableData.total.specificYield.month.value.toFixed(2)}
+                </TableCell>
+                <TableCell>
+                  {tableData.total.specificYield.year.value.toFixed(2)}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </Paper>
+      </div>
     );
-    // return tableData === null ? (
-    //   <TCLC cowSays="Hold on. Our statistician is on vacation right now" />
-    // ) : (
-    //   <Paper className={classes.tableRoot}>
-    //     <Table className={classes.table}>
-    //       <TableHead>
-    //         <TableRow>
-    //           <TableCell key="timestamp">
-    //             {header[0]} {moment(this.state.referenceDate).format(header[1])}
-    //           </TableCell>
-    //           {Array.from(tableData.plants.entries()).map(([oid, plant]) => {
-    //             if (this.state.plants.length > 0 && this.state.plants.indexOf(oid) === -1)
-    //               return null;
-    //             return <TableCell key={oid}>{plant.name}</TableCell>;
-    //           })}
-    //         </TableRow>
-    //       </TableHead>
-    //       <TableBody>
-    //         {Array.from(tableData.dataPool.entries()).map(([timestamp, row]) => {
-    //           return (
-    //             <TableRow key={timestamp}>
-    //               <TableCell>{moment(timestamp).format(tsFormat)}</TableCell>
-    //               {Array.from(tableData.plants.entries()).map(([oid, plant]) => {
-    //                 if (
-    //                   this.state.plants.length > 0 &&
-    //                   this.state.plants.indexOf(oid) === -1
-    //                 )
-    //                   return null;
-    //                 let foundIdx = -1;
-    //                 for (var i = row.length - 1; i >= 0; i--) {
-    //                   if (row[i].oid === oid) foundIdx = i;
-    //                 }
-
-    //                 if (foundIdx === -1) return <TableCell key={oid}>0</TableCell>;
-
-    //                 return (
-    //                   <TableCell key={oid}>
-    //                     {tableData.humanize(row[foundIdx].value)}
-    //                   </TableCell>
-    //                 );
-    //               })}
-    //             </TableRow>
-    //           );
-    //         })}
-    //       </TableBody>
-    //       <TableFooter>
-    //         <TableRow>
-    //           <TableCell>
-    //             Units: <strong>{tableData.unit}</strong> <br />Generated at:{" "}
-    //             <strong>{moment().format()}</strong>
-    //           </TableCell>
-    //         </TableRow>
-    //       </TableFooter>
-    //     </Table>
-    //   </Paper>
-    // );
   }
 }
 
