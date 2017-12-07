@@ -24,6 +24,7 @@ import RightIcon from "material-ui-icons/KeyboardArrowRight";
 import DownloadIcon from "material-ui-icons/FileDownload";
 import IconButton from "material-ui/IconButton";
 import { DatePicker } from "material-ui-pickers";
+import TCLC from "../TCLC";
 
 const styles = theme => ({
   root: {
@@ -241,14 +242,14 @@ class Statistics extends React.Component {
     let { classes } = this.props;
     let { allPlants, tableData } = this.state;
     // Revamp this
-    if (allPlants === null) return <div>Loading</div>;
+    if (allPlants === null) return <TCLC cowSays="Calling our representatives" />;
 
     let tsFormat = getTimestampFormat(this.state.type, this.state.interval);
     let header = tableData && getTableHeader(this.state.type, this.state.interval);
 
     let dataNode =
       tableData === null ? (
-        <div>Loading</div>
+        <TCLC cowSays="Hold on. Our statistician is on vacation right now" />
       ) : (
         <Paper className={classes.tableRoot}>
           <Table className={classes.table}>

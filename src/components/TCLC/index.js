@@ -18,24 +18,25 @@ const styles = theme => ({
   },
   progressText: {
     marginTop: "20px",
-    fontWeight: "bold"
+    fontWeight: "500"
   }
 });
 
-function InitialLoad(props) {
+function TotallyCoolLoadingComponent(props) {
   const { classes } = props;
   return (
     <div className={classes.loadingContainer}>
       <CircularProgress className={classes.progress} size={75} />
       <Typography className={classes.progressText} type="caption">
-        Connecting to the Server. Hang on Tight!
+        {props.cowSays}
       </Typography>
     </div>
   );
 }
 
-InitialLoad.propTypes = {
-  classes: PropTypes.object.isRequired
+TotallyCoolLoadingComponent.propTypes = {
+  classes: PropTypes.object.isRequired,
+  cowSays: PropTypes.string.isRequired
 };
 
-export default withStyles(styles)(InitialLoad);
+export default withStyles(styles)(TotallyCoolLoadingComponent);

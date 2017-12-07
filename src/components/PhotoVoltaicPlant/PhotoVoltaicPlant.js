@@ -19,6 +19,9 @@ import ShareIcon from "material-ui-icons/Share";
 import ExpandMoreIcon from "material-ui-icons/ExpandMore";
 import LaunchIcon from "material-ui-icons/Launch";
 
+import TCLC from "../TCLC";
+
+
 const styles = theme => ({
   metaBox: {
     display: "flex",
@@ -73,7 +76,7 @@ class PhotoVoltaicPlant extends React.Component {
   fetchData() {
     let oid = this.props.match.params.oid;
 
-    if (this.state.meta === null) this.setState({ meta: null });
+    if (this.state.meta !== null) this.setState({ meta: null });
     document.title = "Plant Profile | Sunshine";
 
     fetch(`/api/plants/${oid}`)
@@ -99,7 +102,8 @@ class PhotoVoltaicPlant extends React.Component {
 
     let { meta } = this.state;
 
-    if (meta === null) return <div>Loading</div>;
+    if (meta === null)
+      return <TCLC cowSays="Grabbing Metadata" />;
 
     return (
       <Grid container justify="center" direction="row" className={classes.root}>

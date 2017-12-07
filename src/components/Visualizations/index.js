@@ -20,6 +20,7 @@ import RightIcon from "material-ui-icons/KeyboardArrowRight";
 
 // Tools for graphing
 import Repository from "../../utils/Repository";
+import TCLC from "../TCLC";
 
 import Graph from "./Graph";
 
@@ -148,14 +149,16 @@ class Visualizations extends React.Component {
     let { classes } = this.props;
     let { allPlants, graphData } = this.state;
 
-    // Add a proper loading section
-    if (allPlants === null) return <div>Loading</div>;
+    if (allPlants === null)
+      return (
+        <TCLC cowSays="Hold on a second. I forgot what plants I'm supposed to keep track of" />
+      );
 
     let disabled = graphData === null;
 
     let graph =
       graphData === null ? (
-        <div> Loading</div>
+        <TCLC cowSays="Generating the Graph" />
       ) : (
         <Graph
           data={graphData}

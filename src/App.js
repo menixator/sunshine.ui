@@ -17,7 +17,7 @@ import Typography from "material-ui/Typography";
 import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
 
-import InitialConnect from "./components/InitialConnect";
+import TCLC from "./components/TCLC";
 
 import AppRoutes from "./AppRoutes";
 
@@ -145,17 +145,23 @@ class App extends React.Component {
               </Typography>
             </Toolbar>
           </AppBar>
-          <Sidebar
-            open={this.state.connected && this.state.open}
-            handleDrawerClose={this.handleDrawerClose}
-          />
+          {connected && (
+            <Sidebar
+              open={this.state.connected && this.state.open}
+              handleDrawerClose={this.handleDrawerClose}
+            />
+          ) }
           <main
             className={classNames(classes.content, classes[`content-left`], {
               [classes.contentShift]: open,
               [classes[`contentShift-left`]]: open
             })}
           >
-            {connected ? AppRoutes : <InitialConnect />}
+            {connected ? (
+              AppRoutes
+            ) : (
+              <TCLC cowSays="Convincing My Server that I'm not mean" />
+            )}
           </main>
         </div>
       </div>

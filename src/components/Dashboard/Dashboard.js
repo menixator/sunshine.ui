@@ -17,6 +17,7 @@ import { green, amber, teal, blueGrey } from "material-ui/colors";
 import websock from "../../sock.js";
 
 import Table, { TableBody, TableCell, TableHead, TableRow } from "material-ui/Table";
+import TCLC from "../TCLC";
 
 import Graph from "./Graph";
 
@@ -139,9 +140,8 @@ class Dashboard extends React.Component {
   render() {
     let { classes } = this.props;
 
-    // TODO: CHANGE TO A LOADING
     if (this.state.data === null) {
-      return null;
+      return <TCLC cowSays="Waking up our hamsters"/>;
     }
 
     let { payload } = this.state.data;

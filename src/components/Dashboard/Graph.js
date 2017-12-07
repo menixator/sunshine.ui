@@ -13,6 +13,7 @@ import {
 } from "recharts";
 
 import * as colors from "material-ui/colors";
+import TCLC from "../TCLC";
 
 delete colors.black;
 const COLORS = [
@@ -23,6 +24,8 @@ const COLORS = [
   colors.yellow[300],
   colors.orange[500]
 ];
+
+
 class CustomTooltip extends React.Component {
   propTypes: {
     type: PropTypes.string,
@@ -41,37 +44,37 @@ class CustomTooltip extends React.Component {
             <strong>{moment(label).format("hh:mm A")}</strong>
           </p>
           <table>
-          <tbody>
-            {payload.map((item, idx) => {
-              return (
-                <tr key={idx}>
-                  <td>
-                    <div
-                      style={{
-                        background: item.fill,
-                        width: "10px",
-                        height: "10px",
-                        display: "inline-block"
-                      }}
-                    />
-                  </td>
+            <tbody>
+              {payload.map((item, idx) => {
+                return (
+                  <tr key={idx}>
+                    <td>
+                      <div
+                        style={{
+                          background: item.fill,
+                          width: "10px",
+                          height: "10px",
+                          display: "inline-block"
+                        }}
+                      />
+                    </td>
 
-                  <td>{item.name}</td>
-                  <td>
-                    <b>{item.value.toFixed(2)}</b>
-                  </td>
-                  <td>{item.unit}</td>
-                </tr>
-              );
-            })}
-            <tr style={{ paddingTop: "20px" }}>
-              <td />
-              <td>Total</td>
-              <td>
-                <b>{payload.reduce((val, item) => val + item.value, 0).toFixed(2)}</b>
-              </td>
-              <td>{payload[0].unit}</td>
-            </tr>
+                    <td>{item.name}</td>
+                    <td>
+                      <b>{item.value.toFixed(2)}</b>
+                    </td>
+                    <td>{item.unit}</td>
+                  </tr>
+                );
+              })}
+              <tr style={{ paddingTop: "20px" }}>
+                <td />
+                <td>Total</td>
+                <td>
+                  <b>{payload.reduce((val, item) => val + item.value, 0).toFixed(2)}</b>
+                </td>
+                <td>{payload[0].unit}</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -98,21 +101,20 @@ class PowerChart extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.timestamp !== this.props.timestamp) this.fetchData()
+    if (nextProps.timestamp !== this.props.timestamp) this.fetchData();
   }
-
 
   tickFormatter = timestamp => {
     return moment(timestamp).format("hh:mm A");
   };
 
   render() {
-    let {  state } = this;
+    let { state } = this;
 
     let { data } = state;
 
     // TODO: Loading
-    if (data === null) return null;
+    if (data === null) return <TCLC cowSays="Loading graph"/>;
 
     let tableData = Array.from(data.dataPool.entries()).map(([timestamp, readings]) => {
       return {
