@@ -14,6 +14,8 @@ import ChartIcon from "material-ui-icons/InsertChart";
 import LabelIcon from "material-ui-icons/Label";
 
 import VisualizationsIcon from "material-ui-icons/Visibility";
+import PlantListIcon from "material-ui-icons/List";
+
 
 import Item from "./Item";
 
@@ -79,6 +81,11 @@ class Sidebar extends React.Component {
                 path="/visualizations"
                 primary="Visualizations"
                 icon={<VisualizationsIcon />}
+              />
+              <Item
+                path="/plants"
+                primary="Plant List"
+                icon={<PlantListIcon />}
               />
             </div>
           </List>
