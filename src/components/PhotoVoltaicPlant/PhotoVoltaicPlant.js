@@ -150,7 +150,7 @@ class PhotoVoltaicPlant extends React.Component {
                   Communication
                 </Typography>
                 <Typography type="body1" className={classes.metaPropertyValue}>
-                  {meta.coms.map(com => <div>{com.descr}</div>)}
+                  {meta.coms.map((com, i) => <span key={i}>{com.descr}</span>)}
                 </Typography>
               </div>
 
@@ -159,7 +159,7 @@ class PhotoVoltaicPlant extends React.Component {
                   Inverter(s)
                 </Typography>
                 <Typography type="body1" className={classes.metaPropertyValue}>
-                  {meta.inverters.map(inverter => <div>{inverter.descr}</div>)}
+                  {meta.inverters.map((inverter, i) => <span key={i}>{inverter.descr}</span>)}
                 </Typography>
               </div>
             </CardContent>
