@@ -182,7 +182,7 @@ class Dashboard extends React.Component {
                 <div className={classes.cardHeader}>
                   <span className={classes.cardTitle}>Carbon Reduction</span>
                   <span className={classes.cardSubTitle}>
-                    Total {co2Avoided.total.humanized.value}{" "}
+                    Total <strong>{co2Avoided.total.humanized.value}</strong>{" "}
                     {co2Avoided.total.humanized.unit} avoided
                   </span>
                 </div>
@@ -224,8 +224,8 @@ class Dashboard extends React.Component {
                 <div className={classes.cardHeader}>
                   <span className={classes.cardTitle}>Reimbursement</span>
                   <span className={classes.cardSubTitle}>
-                    Total: {revenue.total.humanized.unit}
-                    {revenue.total.humanized.value}
+                    Total: {revenue.total.humanized.unit}{" "}
+                    <strong>{revenue.total.humanized.value}</strong>
                   </span>
                 </div>
               </div>
