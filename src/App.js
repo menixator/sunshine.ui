@@ -39,16 +39,14 @@ const styles = theme => ({
   },
   appBar: {
     position: "absolute",
-    marginLeft: drawerWidth,
+    marginLeft: drawerWidth
+  },
+  appBarWhenDrawerOpen: {
     [theme.breakpoints.up("md")]: {
       width: `calc(100% - ${drawerWidth}px)`
     }
   },
-  navIconHide: {
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
+  navIconHide: {},
   drawerHeader: theme.mixins.toolbar,
   drawerPaper: {
     height: "100%",
@@ -81,6 +79,8 @@ class App extends React.Component {
     title: "Sunshine"
   };
 
+  unlisten = null;
+
   componentWillMount() {
     websock.on("connect", () => {
       this.setState({ connected: true, lostConnection: false });
@@ -89,17 +89,24 @@ class App extends React.Component {
       this.setState({ connected: false, lostConnection: true })
     );
 
-    history.listen((location, action) => {
-      // location is an object like window.location
-      setTimeout(() => {
-        this.setState({
-          title: document.title.indexOf("|")
-            ? document.title.split("|")[0].trim()
-            : "Sunshine"
-        });
+    this.unlisten = history.listen(this.refreshTitle);
+
+    this.refreshTitle();
+  }
+
+  componentWillUnmount() {
+    this.unlisten();
+  }
+
+  refreshTitle = () => {
+    setTimeout(() => {
+      this.setState({
+        title: document.title.indexOf("|")
+          ? document.title.split("|")[0].trim()
+          : "Sunshine"
       });
     });
-  }
+  };
 
   handleDrawerToggle = () => {
     this.setState({ open: !this.state.open });
@@ -113,7 +120,11 @@ class App extends React.Component {
     return (
       <div className={classes.root}>
         <div className={classes.appFrame}>
-          <AppBar className={classes.appBar}>
+          <AppBar
+            className={classNames(classes.appBar, {
+              [classes.appBarWhenDrawerOpen]: this.state.open
+            })}
+          >
             <Toolbar>
               <IconButton
                 color="contrast"
@@ -146,19 +157,20 @@ class App extends React.Component {
               </Drawer>
             </Hidden>
           )}
-          {connected && (
-            <Hidden mdDown implementation="css">
-              <Drawer
-                type="permanent"
-                open
-                classes={{
-                  paper: classes.drawerPaper
-                }}
-              >
-                {drawer}
-              </Drawer>
-            </Hidden>
-          )}
+          {connected &&
+            this.state.open && (
+              <Hidden mdDown implementation="css">
+                <Drawer
+                  type="persistent"
+                  open={this.state.open}
+                  classes={{
+                    paper: classes.drawerPaper
+                  }}
+                >
+                  {drawer}
+                </Drawer>
+              </Hidden>
+            )}
           <main className={classes.content}>
             {connected ? (
               AppRoutes
