@@ -3,7 +3,7 @@ import React from "react";
 import "./styles/base.css";
 
 import injectTapEventPlugin from "react-tap-event-plugin";
-
+import history from "./history";
 import websock from "./sock.js";
 
 import Sidebar, { DRAWERWIDTH as drawerWidth } from "./components/Sidebar";
@@ -77,7 +77,8 @@ class App extends React.Component {
   state = {
     open: false,
     connected: false,
-    lostConnection: false
+    lostConnection: false,
+    title: "Sunshine"
   };
 
   componentWillMount() {
@@ -87,6 +88,17 @@ class App extends React.Component {
     websock.on("disconnect", () =>
       this.setState({ connected: false, lostConnection: true })
     );
+
+    history.listen((location, action) => {
+      // location is an object like window.location
+      setTimeout(() => {
+        this.setState({
+          title: document.title.indexOf("|")
+            ? document.title.split("|")[0].trim()
+            : "Sunshine"
+        });
+      });
+    });
   }
 
   handleDrawerToggle = () => {
@@ -112,7 +124,7 @@ class App extends React.Component {
                 <MenuIcon />
               </IconButton>
               <Typography type="title" color="inherit" noWrap>
-                Sunshine
+                {this.state.title}
               </Typography>
             </Toolbar>
           </AppBar>
