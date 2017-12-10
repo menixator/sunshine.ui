@@ -55,7 +55,7 @@ class Sidebar extends React.Component {
   }
 
   render() {
-    let { classes, open, handleDrawerClose } = this.props;
+    let { classes, open } = this.props;
     let { plants } = this.state;
     return (
       <div className={classes.drawerInner}>
@@ -95,7 +95,6 @@ class Sidebar extends React.Component {
 Sidebar.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-  handleDrawerClose: PropTypes.func.isRequired
 };
 
 export default withStyles(styles, { withTheme: true })(Sidebar);

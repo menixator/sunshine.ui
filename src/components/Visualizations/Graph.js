@@ -63,6 +63,9 @@ class CustomTooltip extends React.Component {
     }
 
     const { payload, label } = this.props;
+
+    payload.sort((a, b) => a.value - b.value);
+
     let total = [
       <td key="value">
         <b>
@@ -107,7 +110,7 @@ class CustomTooltip extends React.Component {
                 </tr>
               );
             })}
-            <tr style={{ paddingTop: "20px" }}>
+            <tr style={{ marginTop: "40px", border: "1px solid black" }}>
               <td />
               <td>Total</td>
               {total}
@@ -149,11 +152,10 @@ class Graph extends React.Component {
 
     let { data, params, classes } = props;
 
-    if (data.dataPool.size === 0){
+    if (data.dataPool.size === 0) {
       return null;
-
     }
-    
+
     let tableData = Array.from(data.dataPool.entries()).map(([timestamp, readings]) => {
       return {
         timestamp,
@@ -163,7 +165,6 @@ class Graph extends React.Component {
         }, {})
       };
     });
-
 
     let dataStartedToBeSignificant = false;
 

@@ -27,6 +27,11 @@ class CustomTooltip extends React.Component {
 
     if (active) {
       const { payload, label } = this.props;
+
+      if (payload === null) {
+        return null;
+      }
+      payload.sort((a, b) => a.value - b.value);
       return (
         <div className="custom-tooltip">
           <p className="label" style={{ textAlign: "center" }}>
@@ -105,7 +110,6 @@ class PowerChart extends React.Component {
     let { state } = this;
 
     let { data, palette } = state;
-
 
     // TODO: Loading
     if (data === null) return <TCLC cowSays="Loading graph" />;

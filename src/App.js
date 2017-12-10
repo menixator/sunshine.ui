@@ -39,7 +39,8 @@ const styles = theme => ({
   },
   appBar: {
     position: "absolute",
-    marginLeft: drawerWidth
+    marginLeft: drawerWidth,
+    background: "#f37021"
   },
   appBarWhenDrawerOpen: {
     [theme.breakpoints.up("md")]: {
