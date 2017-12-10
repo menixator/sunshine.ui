@@ -28,7 +28,7 @@ const styles = theme => {
       height: "100%",
       width: DRAWERWIDTH
     },
-    drawerInner: {height: "100%"},
+    drawerInner: {height: "100vh"},
     drawerHeader: {
       display: "flex",
       alignItems: "center",

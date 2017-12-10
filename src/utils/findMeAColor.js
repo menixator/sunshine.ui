@@ -1,9 +1,9 @@
 import * as colors from "material-ui/colors";
 
-import { getContrastRatio } from "material-ui/styles/colorManipulator";
+import { getContrastRatio, darken } from "material-ui/styles/colorManipulator";
 
-const mainPalette = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
-const altPalette = ["A100", "A200", "A400", "A700"];
+const mainPalette = [400, 500];
+const altPalette = [];
 
 // mainColors have alternative palettes
 const mainColors = [
@@ -15,7 +15,6 @@ const mainColors = [
   "blue",
   "lightBlue",
   "cyan",
-  "teal",
   "green",
   "lightGreen",
   "lime",
@@ -26,14 +25,24 @@ const mainColors = [
 ];
 
 // neutralColors do not.
-const neutralColors = ["brown", "grey", "blueGrey"];
+const neutralColors = ["grey", "blueGrey"];
 
+let unfurlMainPalette = color => [...mainPalette.map(hue => colors[color][hue])];
+let unfurlAltPalette = color => [...altPalette.map(hue => colors[color][hue])];
 
-function random(min, max){
-  return Math.findMeAColor
-}
+const allColors = ["rgba(63, 188, 255, 1)"].concat(...mainColors.map(unfurlMainPalette));
 
+let random = palette => {
+  if (palette.size === allColors.length) throw new Error("palette exhausted!");
 
-export default function findMeAColor(palette){
+  let randomColor = allColors[Math.floor(Math.random() * allColors.length)];
 
+  if (palette.has(randomColor)) return random(palette);
+
+  palette.add(randomColor);
+  return randomColor;
+};
+
+export default function findMeAColor(palette) {
+  return random(palette);
 }

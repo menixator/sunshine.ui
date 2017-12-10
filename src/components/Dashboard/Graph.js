@@ -12,19 +12,8 @@ import {
   ResponsiveContainer
 } from "recharts";
 
-import * as colors from "material-ui/colors";
 import TCLC from "../TCLC";
-
-delete colors.black;
-const COLORS = [
-  colors.red[500],
-  colors.blue[500],
-  colors.green[400],
-  colors.purple[500],
-  colors.yellow[300],
-  colors.orange[500]
-];
-
+import findMeAColor from "../../utils/findMeAColor";
 
 class CustomTooltip extends React.Component {
   propTypes: {
@@ -85,13 +74,17 @@ class CustomTooltip extends React.Component {
 }
 
 class PowerChart extends React.Component {
-  state = { data: null };
+  state = { data: null, palette: new Set() };
   timeout = null;
 
   fetchData() {
     fetch("/api/stats/power/aggregated")
       .then(res => res.json())
       .then(body => {
+        if (this.state.palette.size < body.payload.plants.length) {
+          while (this.state.palette.size < body.payload.plants.length)
+            findMeAColor(this.state.palette);
+        }
         this.setState({ data: new Repository(body.payload) });
       });
   }
@@ -111,11 +104,13 @@ class PowerChart extends React.Component {
   render() {
     let { state } = this;
 
-    let { data } = state;
+    let { data, palette } = state;
+
 
     // TODO: Loading
-    if (data === null) return <TCLC cowSays="Loading graph"/>;
+    if (data === null) return <TCLC cowSays="Loading graph" />;
 
+    let colors = Array.from(palette.values());
     let tableData = Array.from(data.dataPool.entries()).map(([timestamp, readings]) => {
       return {
         timestamp,
@@ -155,7 +150,7 @@ class PowerChart extends React.Component {
               unit={"kW"}
               name={plant.name}
               stackId="a"
-              fill={COLORS[idx]}
+              fill={colors[idx]}
             />
           ))}
         </BarChart>
