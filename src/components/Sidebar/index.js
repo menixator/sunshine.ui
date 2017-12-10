@@ -16,7 +16,6 @@ import LabelIcon from "material-ui-icons/Label";
 import VisualizationsIcon from "material-ui-icons/Visibility";
 import PlantListIcon from "material-ui-icons/List";
 
-
 import Item from "./Item";
 
 // Drawer's width
@@ -29,6 +28,7 @@ const styles = theme => {
       height: "100%",
       width: DRAWERWIDTH
     },
+    drawerInner: {height: "100%"},
     drawerHeader: {
       display: "flex",
       alignItems: "center",
@@ -58,53 +58,36 @@ class Sidebar extends React.Component {
     let { classes, open, handleDrawerClose } = this.props;
     let { plants } = this.state;
     return (
-      <Drawer
-        type="persistent"
-        classes={{
-          paper: classes.drawerPaper
-        }}
-        anchor="left"
-        open={open}
-      >
-        <div className={classes.drawerInner}>
-          <div className={classes.drawerHeader}>
-            <IconButton onClick={handleDrawerClose}>
-              <ChevronLeftIcon />
-            </IconButton>
+      <div className={classes.drawerInner}>
+        <div className={classes.drawerHeader} />
+        <Divider />
+        <List className={classes.list}>
+          <div>
+            <Item path="/" primary="Dashboard" icon={<DashboardIcon />} />
+            <Item path="/statistics" primary="Statistics" icon={<ChartIcon />} />
+            <Item
+              path="/visualizations"
+              primary="Visualizations"
+              icon={<VisualizationsIcon />}
+            />
+            <Item path="/plants" primary="Plant List" icon={<PlantListIcon />} />
           </div>
-          <Divider />
-          <List className={classes.list}>
-            <div>
-              <Item path="/" primary="Dashboard" icon={<DashboardIcon />} />
-              <Item path="/statistics" primary="Statistics" icon={<ChartIcon />} />
+        </List>
+        <Divider />
+        <List className={classes.list}>
+          <div>
+            <ListSubheader>Plants</ListSubheader>
+            {plants.map(plant => (
               <Item
-                path="/visualizations"
-                primary="Visualizations"
-                icon={<VisualizationsIcon />}
+                key={plant.oid}
+                path={`/plants/${plant.oid}`}
+                primary={plant.name.replace(/dhiraagu\s*,\s*/gi, "").trim()}
+                icon={<LabelIcon />}
               />
-              <Item
-                path="/plants"
-                primary="Plant List"
-                icon={<PlantListIcon />}
-              />
-            </div>
-          </List>
-          <Divider />
-          <List className={classes.list}>
-            <div>
-              <ListSubheader>Plants</ListSubheader>
-              {plants.map(plant => (
-                <Item
-                  key={plant.oid}
-                  path={`/plants/${plant.oid}`}
-                  primary={plant.name.replace(/dhiraagu\s*,\s*/gi, "").trim()}
-                  icon={<LabelIcon />}
-                />
-              ))}
-            </div>
-          </List>
-        </div>
-      </Drawer>
+            ))}
+          </div>
+        </List>
+      </div>
     );
   }
 }

@@ -16,10 +16,9 @@ import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
 import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
-
+import Hidden from "material-ui/Hidden";
+import Drawer from "material-ui/Drawer";
 import TCLC from "./components/TCLC";
-
-
 
 import AppRoutes from "./AppRoutes";
 
@@ -30,9 +29,9 @@ const styles = theme => ({
     width: "100%",
     height: "100%",
     zIndex: 1,
-    overflow: "hidden"
+    overflow: "auto"
   },
-  appCradle: {
+  appFrame: {
     position: "relative",
     display: "flex",
     width: "100%",
@@ -40,66 +39,43 @@ const styles = theme => ({
   },
   appBar: {
     position: "absolute",
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
-  },
-  appBarShift: {
-    // width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  "appBarShift-left": {
-    marginLeft: drawerWidth
-  },
-
-  menuButton: {
-    marginLeft: 12,
-    marginRight: 20
-  },
-  hide: {
-    display: "none"
-  },
-  content: {
-    overflow: "auto",
-    width: "100%",
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3,
-    boxSizing: "border-box",
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    // height: "calc(100% - 56px)",
-    marginTop: 64,
-    [theme.breakpoints.up("sm")]: {
-      content: {
-        // height: "calc(100% - 64px)",
-        marginTop: 64
-      }
+    marginLeft: drawerWidth,
+    [theme.breakpoints.up("md")]: {
+      width: `calc(100% - ${drawerWidth}px)`
     }
   },
-  "content-left": {
-    marginLeft: -drawerWidth
+  navIconHide: {
+    [theme.breakpoints.up("md")]: {
+      display: "none"
+    }
   },
-  contentShift: {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    })
+  drawerHeader: theme.mixins.toolbar,
+  drawerPaper: {
+    height: "100%",
+    width: 250,
+    [theme.breakpoints.up("md")]: {
+      width: drawerWidth,
+      position: "relative",
+      height: "100%"
+    }
   },
-  "contentShift-left": {
-    marginLeft: 0
+  content: {
+    backgroundColor: theme.palette.background.default,
+    width: "100%",
+    boxSizing: "border-box",
+    padding: theme.spacing.unit * 3,
+    height: "calc(100% - 56px)",
+    marginTop: 56,
+    [theme.breakpoints.up("sm")]: {
+      height: "calc(100% - 64px)",
+      marginTop: 64
+    }
   }
 });
 
 class App extends React.Component {
   state = {
-    open: true,
+    open: false,
     connected: false,
     lostConnection: false
   };
@@ -113,32 +89,25 @@ class App extends React.Component {
     );
   }
 
-  handleDrawerOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleDrawerClose = () => {
-    this.setState({ open: false });
+  handleDrawerToggle = () => {
+    this.setState({ open: !this.state.open });
   };
 
   render() {
     let { classes } = this.props;
     let { open, connected } = this.state;
+
+    let drawer = <Sidebar />;
     return (
       <div className={classes.root}>
-        <div className={classes.appCradle}>
-          <AppBar
-            className={classNames(classes.appBar, {
-              [classes.appBarShift]: open,
-              [classes[`appBarShift-left`]]: open
-            })}
-          >
-            <Toolbar disableGutters={!open}>
+        <div className={classes.appFrame}>
+          <AppBar className={classes.appBar}>
+            <Toolbar>
               <IconButton
                 color="contrast"
                 aria-label="open drawer"
-                onClick={this.handleDrawerOpen}
-                className={classNames(classes.menuButton, open && classes.hide)}
+                onClick={this.handleDrawerToggle}
+                className={classes.navIconHide}
               >
                 <MenuIcon />
               </IconButton>
@@ -148,17 +117,37 @@ class App extends React.Component {
             </Toolbar>
           </AppBar>
           {connected && (
-            <Sidebar
-              open={this.state.connected && this.state.open}
-              handleDrawerClose={this.handleDrawerClose}
-            />
-          ) }
-          <main
-            className={classNames(classes.content, classes[`content-left`], {
-              [classes.contentShift]: open,
-              [classes[`contentShift-left`]]: open
-            })}
-          >
+            <Hidden mdUp>
+              <Drawer
+                type="temporary"
+                anchor="left"
+                open={this.state.open}
+                classes={{
+                  paper: classes.drawerPaper
+                }}
+                onRequestClose={this.handleDrawerToggle}
+                ModalProps={{
+                  keepMounted: true // Better open performance on mobile.
+                }}
+              >
+                {drawer}
+              </Drawer>
+            </Hidden>
+          )}
+          {connected && (
+            <Hidden mdDown implementation="css">
+              <Drawer
+                type="permanent"
+                open
+                classes={{
+                  paper: classes.drawerPaper
+                }}
+              >
+                {drawer}
+              </Drawer>
+            </Hidden>
+          )}
+          <main className={classes.content}>
             {connected ? (
               AppRoutes
             ) : (
