@@ -46,7 +46,7 @@ const styles = theme => ({
   paperContent: {
     width: "85%",
     position: "absolute",
-    zIndex: 9999999,
+    zIndex: 10,
     boxSizing: "border-box",
     textAlign: "right"
   },
