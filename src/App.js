@@ -16,6 +16,8 @@ import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
 import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
+import HideMenuIcon from "material-ui-icons/ChevronLeft";
+
 import Hidden from "material-ui/Hidden";
 import Drawer from "material-ui/Drawer";
 import TCLC from "./components/TCLC";
@@ -35,7 +37,8 @@ const styles = theme => ({
     position: "relative",
     display: "flex",
     width: "100%",
-    height: "100%"
+    height: "100%",
+    overflow: "hidden"
   },
   appBar: {
     position: "absolute",
@@ -59,11 +62,12 @@ const styles = theme => ({
     }
   },
   content: {
+    overflowY: "auto",
     backgroundColor: theme.palette.background.default,
     width: "100%",
     boxSizing: "border-box",
     padding: theme.spacing.unit * 3,
-    height: "calc(100% - 56px)",
+    height: "calc(100% - 64px)",
     marginTop: 56,
     [theme.breakpoints.up("sm")]: {
       height: "calc(100% - 64px)",
@@ -133,11 +137,14 @@ class App extends React.Component {
                 onClick={this.handleDrawerToggle}
                 className={classes.navIconHide}
               >
-                <MenuIcon />
+                {this.state.open ? <HideMenuIcon/> : <MenuIcon />}
               </IconButton>
               <Typography type="title" color="inherit" noWrap>
                 {this.state.title}
               </Typography>
+
+
+
             </Toolbar>
           </AppBar>
           {connected && (
