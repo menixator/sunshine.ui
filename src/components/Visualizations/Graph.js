@@ -192,7 +192,11 @@ class Graph extends React.Component {
             />
             <YAxis tickLine={false} tickCount={10} />
             <CartesianGrid />
-            <Tooltip content={<CustomTooltip params={params} />} />
+            <Tooltip
+              content={<CustomTooltip params={params} />}
+              animationDuration={100}
+              animationEasing={"ease-in"}
+            />
             {(showAllPlants || params.plants.length > 1) && <Legend iconType="circle" />}
             {Array.from(data.plants.entries()).map(
               ([oid, plant], idx) =>
