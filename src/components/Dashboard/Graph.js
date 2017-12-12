@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Repository from "../../utils/Repository";
 import moment from "moment";
 import {
@@ -80,10 +81,15 @@ class CustomTooltip extends React.Component {
 
 class PowerChart extends React.Component {
   state = { data: null, palette: new Set() };
-  timeout = null;
+
+  static propTypes = {
+    timestamp: PropTypes.number
+  };
 
   fetchData() {
-    fetch("/api/stats/power/aggregated")
+    let timestamp = this.props.timestamp || Date.now();
+
+    fetch(`/api/stats/power/aggregated?timestamp=${timestamp}`)
       .then(res => res.json())
       .then(body => {
         if (this.state.palette.size < body.payload.plants.length) {
@@ -98,8 +104,14 @@ class PowerChart extends React.Component {
     this.fetchData();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.timestamp !== this.props.timestamp) this.fetchData();
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.timestamp !== this.props.timestamp) {
+      if (moment(prevProps.timestamp).date() !== moment(this.props.timestamp).date()) {
+        this.setState({ data: null });
+      }
+
+      this.fetchData();
+    }
   }
 
   tickFormatter = timestamp => {
@@ -115,11 +127,15 @@ class PowerChart extends React.Component {
     if (data === null) return <TCLC cowSays="Loading graph" />;
 
     let colors = Array.from(palette.values());
+
+    let usedPlants = new Set();
+
     let tableData = Array.from(data.dataPool.entries()).map(([timestamp, readings]) => {
       return {
         timestamp,
         ...readings.reduce((obj, reading) => {
           obj[reading.oid] = reading.value;
+          if (!usedPlants.has(reading.oid)) usedPlants.add(reading.oid);
           return obj;
         }, {})
       };
@@ -135,6 +151,7 @@ class PowerChart extends React.Component {
             .reduce((p, v) => p + v, 0) > 0;
     });
 
+    debugger;
     return (
       <ResponsiveContainer>
         <BarChart data={tableData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
@@ -147,16 +164,19 @@ class PowerChart extends React.Component {
           <CartesianGrid />
           <Tooltip content={<CustomTooltip />} />
           <Legend iconType="circle" />
-          {Array.from(data.plants.entries()).map(([oid, plant], idx) => (
-            <Bar
-              key={oid}
-              dataKey={oid}
-              unit={"kW"}
-              name={plant.name}
-              stackId="a"
-              fill={colors[idx]}
-            />
-          ))}
+          {Array.from(data.plants.entries()).map(([oid, plant], idx) => {
+            if (!usedPlants.has(oid)) return null;
+            return (
+              <Bar
+                key={oid}
+                dataKey={oid}
+                unit={"kW"}
+                name={plant.name}
+                stackId="a"
+                fill={colors[idx]}
+              />
+            );
+          })}
         </BarChart>
       </ResponsiveContainer>
     );

@@ -7,6 +7,8 @@ import PowerIcon from "material-ui-icons/WbSunny";
 import CarbonIcon from "material-ui-icons/LocalFlorist";
 import EnergyIcon from "material-ui-icons/FlashOn";
 import RevenueIcon from "material-ui-icons/MonetizationOn";
+import TimeTravelIcon from "material-ui-icons/AccessTime";
+import RefreshIcon from "material-ui-icons/Refresh";
 
 import Typography from "material-ui/Typography";
 import classNames from "classnames";
@@ -16,20 +18,23 @@ import Card, { CardHeader, CardContent } from "material-ui/Card";
 import { green, amber, teal, blueGrey } from "material-ui/colors";
 import websock from "../../sock.js";
 
+import Toolbar from "material-ui/Toolbar";
 import Table, { TableBody, TableCell, TableHead, TableRow } from "material-ui/Table";
 import TCLC from "../TCLC";
 
+import IconButton from "material-ui/IconButton";
+
+import LeftIcon from "material-ui-icons/KeyboardArrowLeft";
+import RightIcon from "material-ui-icons/KeyboardArrowRight";
+
+import { DatePicker } from "material-ui-pickers";
+
+import moment from "moment";
 import Graph from "./Graph";
 
 const styles = theme => ({
   root: {
-    height: "100%",
-    flexGrow: 1,
-    display: "flex",
-    flexFlow: "row wrap",
-    justifyContent: "center",
-    alignItems: "center",
-    alignContent: "center"
+    height: "100%"
   },
   paper: {
     height: "150px",
@@ -97,6 +102,11 @@ const styles = theme => ({
     color: "#000",
     opacity: 0.25
   },
+  timeTravelButton: {
+    position: "fixed",
+    bottom: "40px",
+    right: "40px"
+  },
   control: {
     padding: theme.spacing.unit * 2
   },
@@ -108,67 +118,144 @@ const styles = theme => ({
   },
   energyCard: { background: blueGrey[500] },
   revenueCard: { background: green[500] },
-  graph: { height: "560px", userSelect: "none" },
-  plantReadings: { maxHeight: "560px", overflowX: "auto" }
+  graph: { height: "520px", userSelect: "none" },
+  plantReadings: { maxHeight: "520px", overflowX: "auto" },
+  timestamp: {
+    lineHeight: "48px",
+    fontSize: "13px",
+    verticalAlign: "top",
+    color: "#616161",
+    fontWeight: "500",
+    fontSmoothing: "antialiased"
+  },
+
+  datePicker: { display: "none" },
+  timeGrid: { textAlign: "center" }
 });
 
 const SUBSCRIBE_EVENT = "sunny::aggregation.subscribe";
 const DATA_EVENT = "sunny::aggregation.tick";
 const UNSUBSCRIBE_EVENT = "sunny::aggregation.unsubscribe";
 
+let isSameDay = (a, b) =>
+  Math.abs(a.valueOf() - b.valueOf()) <= moment.duration(1, "day") &&
+  a.date() === b.date();
+
 class Dashboard extends React.Component {
-  state = { data: null, sockId: websock.id };
+  state = { data: null, sockId: websock.id, date: null };
 
   componentWillMount() {
     document.title = "Dashboard | Sunshine";
 
-    websock.on(DATA_EVENT, this.onEvent);
+    this.subscribeToRealTimeEvents();
+  }
+
+  subscribeToRealTimeEvents() {
+    websock.on(DATA_EVENT, this.onRealTimeData);
     websock.emit(SUBSCRIBE_EVENT);
   }
 
   componentWillUnmount() {
     if (!websock.disconnected) {
-      websock.emit(UNSUBSCRIBE_EVENT);
-      websock.off(DATA_EVENT, this.onEvent);
+      this.unsubscribeFromRealTimeEvents();
     }
   }
 
-  onEvent = data => {
+  fetchPastData() {
+    fetch(`/api/dayOverview?timestamp=${this.state.date}`)
+      .then(res => res.json())
+      .then(body => {
+        this.setState({ data: body });
+      });
+  }
+
+  unsubscribeFromRealTimeEvents() {
+    websock.emit(UNSUBSCRIBE_EVENT);
+    websock.off(DATA_EVENT, this.onRealTimeData);
+  }
+
+  onRealTimeData = data => {
     this.setState({ data: data });
+  };
+
+  showDatePicker = ev => {
+    ev && ev.preventDefault();
+    this.datePicker.togglePicker();
+  };
+
+  resetDate = ev => {
+    ev && ev.preventDefault();
+
+    this.setState({ date: null, data: null }, () => {
+      this.subscribeToRealTimeEvents();
+    });
+  };
+
+  handleDateChange = instant => {
+    if (isSameDay(instant, moment())) {
+      if (this.state.date === null) return false;
+      return this.resetDate();
+    }
+
+    this.unsubscribeFromRealTimeEvents();
+    this.setState({ date: instant.valueOf(), data: null }, () => {
+      this.fetchPastData();
+    });
   };
 
   render() {
     let { classes } = this.props;
 
     if (this.state.data === null) {
-      return <TCLC cowSays="Waking up our hamsters"/>;
+      return <TCLC cowSays="Waking up our hamsters" />;
     }
+
+    let isRealtime = this.state.date === null;
 
     let { payload } = this.state.data;
 
     let { plants } = payload;
     let { co2Avoided, energy, power, revenue } = payload.aggregated;
+
+    let meterGridOptions = {
+      xs: 12,
+      sm: 12,
+      md: isRealtime ? 6 : 4,
+      lg: isRealtime ? 3 : 4
+    };
+    let cardTitleDate = isRealtime
+      ? null
+      : moment(this.state.date).format("Do MMMM YYYY");
+
+    for (let i = plants.length; i-- > 0; ) {
+      if (plants[i].energy.total.value === 0){
+        plants.splice(i, 1)
+      }
+    }
+
     return (
-      <div>
+      <div className={classes.root}>
         <Grid container>
-          <Grid item xs={12} sm={12} md={6} lg={3}>
-            <Paper className={classNames(classes.paper, classes.powerCard)}>
-              <div className={classes.paperContent}>
-                <div className={classes.reading}>
-                  <span className={classes.readingValue}>{power.humanized.value}</span>
-                  <span className={classes.readingUnit}>{power.humanized.unit}</span>
+          {isRealtime && (
+            <Grid item {...meterGridOptions}>
+              <Paper className={classNames(classes.paper, classes.powerCard)}>
+                <div className={classes.paperContent}>
+                  <div className={classes.reading}>
+                    <span className={classes.readingValue}>{power.humanized.value}</span>
+                    <span className={classes.readingUnit}>{power.humanized.unit}</span>
+                  </div>
+                  <div className={classes.cardHeader}>
+                    <span className={classes.cardTitle}>Power Reading</span>
+                    <span className={classes.cardSubTitle}>
+                      Total of {plants.length} plants
+                    </span>
+                  </div>
                 </div>
-                <div className={classes.cardHeader}>
-                  <span className={classes.cardTitle}>Power Reading</span>
-                  <span className={classes.cardSubTitle}>
-                    Total of {plants.length} plants
-                  </span>
-                </div>
-              </div>
-              <PowerIcon className={classes.sideIcon} />
-            </Paper>
-          </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={3}>
+                <PowerIcon className={classes.sideIcon} />
+              </Paper>
+            </Grid>
+          )}
+          <Grid item {...meterGridOptions}>
             <Paper className={classNames(classes.paper, classes.carbonCard)}>
               <div className={classes.paperContent}>
                 <div className={classes.reading}>
@@ -190,7 +277,7 @@ class Dashboard extends React.Component {
               <CarbonIcon className={classes.sideIcon} />
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={3}>
+          <Grid item {...meterGridOptions}>
             <Paper className={classNames(classes.paper, classes.energyCard)}>
               <div className={classes.paperContent}>
                 <div className={classes.reading}>
@@ -212,7 +299,7 @@ class Dashboard extends React.Component {
               <EnergyIcon className={classes.sideIcon} />
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={3}>
+          <Grid item {...meterGridOptions}>
             <Paper className={classNames(classes.paper, classes.revenueCard)}>
               <div className={classes.paperContent}>
                 <div className={classes.reading}>
@@ -235,24 +322,28 @@ class Dashboard extends React.Component {
 
           <Grid item xs={12} sm={12} md={6} lg={6}>
             <Card>
-              <CardHeader title="Today's Graph" />
+              <CardHeader
+                title={isRealtime ? "Today's Graph" : "Graph for " + cardTitleDate}
+              />
               <CardContent>
                 <div className={classes.graph}>
-                  <Graph timestamp={payload.timestamp} />
+                  <Graph timestamp={this.state.date} />
                 </div>
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={6}>
             <Card>
-              <CardHeader title="Today's Readings" />
+              <CardHeader
+                title={isRealtime ? "Today's Graph" : "Readings for " + cardTitleDate}
+              />
               <CardContent>
                 <div className={classes.plantReadings}>
                   <Table>
                     <TableHead>
                       <TableRow>
                         <TableCell>Plant Name</TableCell>
-                        <TableCell>Power(kW)</TableCell>
+                        {isRealtime && <TableCell>Power(kW)</TableCell>}
                         <TableCell>Energy(kWh)</TableCell>
                         <TableCell>
                           Co<sub>2</sub> Reduction(kg)
@@ -266,14 +357,19 @@ class Dashboard extends React.Component {
                           <TableCell>
                             {plant.name.replace(/dhiraagu\s*,\s*/gi, "")}
                           </TableCell>
-                          <TableCell>
-                            {plant.power.latest.humanized.value}
-                            {plant.power.discontinuity > 0 ? (
-                              <Typography color="error" className={classes.discontinuity}>
-                                (-{plant.power.discontinuity})
-                              </Typography>
-                            ) : null}
-                          </TableCell>
+                          {isRealtime && (
+                            <TableCell>
+                              {plant.power.latest.humanized.value}
+                              {plant.power.discontinuity > 0 ? (
+                                <Typography
+                                  color="error"
+                                  className={classes.discontinuity}
+                                >
+                                  (-{plant.power.discontinuity})
+                                </Typography>
+                              ) : null}
+                            </TableCell>
+                          )}
                           <TableCell>{plant.energy.day.humanized.value}</TableCell>
                           <TableCell>{plant.co2Avoided.today.humanized.value}</TableCell>
                           <TableCell>{plant.revenue.today.humanized.value}</TableCell>
@@ -284,6 +380,51 @@ class Dashboard extends React.Component {
                 </div>
               </CardContent>
             </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Grid container alignItems="flex-end" justify="flex-end">
+              <Grid className={classes.timeGrid} item xs={12} sm={12} md={6} lg={3}>
+                <span className={classes.timestamp}>
+                  {isRealtime
+                    ? `Last Updated at ${moment(payload.timestamp).toString()}`
+                    : `Data from ${moment(this.state.date).format("Do MMMM YYYY")}`}
+                </span>
+                <IconButton onClick={this.showDatePicker}>
+                  <TimeTravelIcon
+                    style={{
+                      width: 20,
+                      height: 20
+                    }}
+                  />
+                </IconButton>
+                {this.state.date !== null && (
+                  <IconButton onClick={this.resetDate}>
+                    <RefreshIcon
+                      style={{
+                        width: 20,
+                        height: 20
+                      }}
+                    />
+                  </IconButton>
+                )}
+                <DatePicker
+                  ref={pickr => (this.datePicker = pickr)}
+                  disabled={false}
+                  id="datePicker"
+                  disableFuture
+                  autoOk
+                  format="DD MMMM YYYY"
+                  returnMoment
+                  className={classes.datePicker}
+                  value={this.state.date || Date.now()}
+                  onChange={this.handleDateChange}
+                  animateYearScrolling={false}
+                  leftArrowIcon={<LeftIcon />}
+                  rightArrowIcon={<RightIcon />}
+                />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </div>
