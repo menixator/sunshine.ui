@@ -30,13 +30,6 @@ class Repository {
   }
 
   humanize(value) {
-    switch (this.meta.type) {
-      case "co2-avoided":
-        value = value / 1000;
-        break;
-
-      default:
-    }
 
     if (value < 1 && value > 0) {
       return parseFloat(value.toFixed(4), 10);
