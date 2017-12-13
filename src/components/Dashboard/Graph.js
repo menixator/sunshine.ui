@@ -151,7 +151,6 @@ class PowerChart extends React.Component {
             .reduce((p, v) => p + v, 0) > 0;
     });
 
-    debugger;
     return (
       <ResponsiveContainer>
         <BarChart data={tableData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
