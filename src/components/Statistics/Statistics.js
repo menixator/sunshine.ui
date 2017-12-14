@@ -18,11 +18,12 @@ import { MenuItem } from "material-ui/Menu";
 import { FormControl } from "material-ui/Form";
 import Grid from "material-ui/Grid";
 import Select from "material-ui/Select";
+import Card, { CardContent, CardActions } from "material-ui/Card";
 
 import LeftIcon from "material-ui-icons/KeyboardArrowLeft";
 import RightIcon from "material-ui-icons/KeyboardArrowRight";
 import DownloadIcon from "material-ui-icons/FileDownload";
-import IconButton from "material-ui/IconButton";
+import Button from "material-ui/Button";
 import { DatePicker } from "material-ui-pickers";
 import TCLC from "../TCLC";
 
@@ -32,33 +33,50 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column"
   },
+
   datePicker: {
     fontFamily: "Roboto",
-    marginTop: "15px",
+    marginTop: "16px",
     width: "100%"
   },
   tableRoot: {
+    [theme.breakpoints.up("md")]: { width: "calc(100% - 400px)" },
     width: "100%",
+    alignSelf: "center",
     marginTop: theme.spacing.unit * 3,
     overflowX: "auto"
   },
   table: {
     minWidth: 700
   },
-  typeFormControl: {
-    margin: theme.spacing.unit,
-    width: "100%"
+
+
+  formControl: {
+    minWidth: "200px",
+    margin: theme.spacing.unit * 2
   },
-  multiSelectControl: {
-    margin: theme.spacing.unit,
-    width: "100%"
+
+
+  formPaper: {
+    [theme.breakpoints.up("md")]: { width: "calc(100% - 400px)" },
+    width: "100%",
+    boxSizing: "border-box",
+    alignSelf: "center"
   },
-  formpaper: {
+
+  formActions: {
     display: "flex",
-    flexWrap: "wrap"
+    justifyContent: "flex-end"
   },
   formGrid: {
-    padding: theme.spacing.unit * 3
+    display: "flex",
+    justifyContent: "center",
+    flexWrap: "wrap"
+  },
+  downloadButton: {
+    position: "absolute",
+    right: "40px",
+    bottom: "40px"
   }
 });
 
@@ -199,6 +217,10 @@ class Statistics extends React.Component {
         fileName += ` Reimbursement Readings for ${this.state.referenceDate.format(
           this.state.interval === "month" ? "MMMM YYYY" : "YYYY"
         )}`;
+      } else if (this.state.type === 'energy'){
+        fileName += ` Energy Readings for ${this.state.referenceDate.format(
+          this.state.interval === "month" ? "MMMM YYYY" : "YYYY"
+        )}`;
       }
 
       fileName += ".csv";
@@ -311,107 +333,94 @@ class Statistics extends React.Component {
     let disabled = tableData === null;
 
     let intervalSelector = this.state.type !== "power" && (
-      <Grid item xs={12} md={2}>
-        <FormControl disabled={disabled} className={classes.typeFormControl}>
-          <InputLabel htmlFor="interval">Data Interval</InputLabel>
-          <Select
-            value={this.state.interval}
-            onChange={this.handleIntervalChange}
-            input={<Input name="interval" id="interval" />}
-          >
-            <MenuItem value="month">Month</MenuItem>
-            <MenuItem value="year">Year</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
+      <FormControl disabled={disabled} className={classes.formControl}>
+        <InputLabel htmlFor="interval">Data Interval</InputLabel>
+        <Select
+          value={this.state.interval}
+          onChange={this.handleIntervalChange}
+          input={<Input name="interval" id="interval" />}
+        >
+          <MenuItem value="month">Month</MenuItem>
+          <MenuItem value="year">Year</MenuItem>
+        </Select>
+      </FormControl>
     );
 
     return (
       <div className={classes.root}>
-        <Paper className={classes.formPaper}>
-          <Grid
-            container
-            alignItems="center"
-            justify="center"
-            className={classes.formGrid}
-          >
-            <Grid item xs={12} md={3}>
-              <FormControl disabled={disabled} className={classes.typeFormControl}>
-                <InputLabel htmlFor="type">Statistic Type</InputLabel>
-                <Select
-                  value={this.state.type}
-                  onChange={this.handleTypeChange}
-                  input={<Input name="type" id="type" />}
-                >
-                  <MenuItem value="power">Power</MenuItem>
-                  <MenuItem value="energy">Energy</MenuItem>
-
-                  <MenuItem value="co2-avoided">Carbon Avoided</MenuItem>
-                  <MenuItem value="revenue">Reimbursement</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <FormControl disabled={disabled} className={classes.multiSelectControl}>
-                <InputLabel htmlFor="plants-multiple">Plants</InputLabel>
-                <Select
-                  multiple
-                  value={this.state.plants}
-                  onChange={this.handlePlantChange}
-                  input={<Input id="plants-multiple" />}
-                  MenuProps={{
-                    PaperProps: {
-                      style: {
-                        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                        width: 200
-                      }
-                    }
-                  }}
-                >
-                  {allPlants.map(plant => {
-                    return (
-                      <MenuItem key={plant.oid} value={plant.oid}>
-                        {plant.name.replace(/dhiraagu\s*,\s*/gi, "").trim()}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-            </Grid>
-            {intervalSelector}
-            <Grid item xs={12} md={3}>
-              <FormControl disabled={disabled} className={classes.typeFormControl}>
-                <InputLabel shrink htmlFor="datePicker">
-                  Reference Date
-                </InputLabel>
-                <DatePicker
-                  disabled={disabled}
-                  id="datePicker"
-                  disableFuture
-                  autoOk
-                  format="DD MMMM YYYY"
-                  returnMoment
-                  className={classes.datePicker}
-                  value={this.state.referenceDate}
-                  onChange={this.handleDateChange}
-                  animateYearScrolling={false}
-                  leftArrowIcon={<LeftIcon />}
-                  rightArrowIcon={<RightIcon />}
-                />
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} md={1}>
-              <IconButton
-                aria-label="Delete"
-                disabled={disabled || this.state.generatingCSV}
-                onClick={this.onDownloadClick}
+        <Card className={classes.formPaper}>
+          <CardContent className={classes.formGrid}>
+            <FormControl disabled={disabled} className={classes.formControl}>
+              <InputLabel htmlFor="type">Statistic Type</InputLabel>
+              <Select
+                value={this.state.type}
+                onChange={this.handleTypeChange}
+                input={<Input name="type" id="type" />}
               >
-                <DownloadIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-        </Paper>
+                <MenuItem value="power">Power</MenuItem>
+                <MenuItem value="energy">Energy</MenuItem>
+
+                <MenuItem value="co2-avoided">Carbon Avoided</MenuItem>
+                <MenuItem value="revenue">Reimbursement</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl disabled={disabled} className={classes.formControl}>
+              <InputLabel htmlFor="plants-multiple">Plants</InputLabel>
+              <Select
+                multiple
+                value={this.state.plants}
+                onChange={this.handlePlantChange}
+                input={<Input id="plants-multiple" />}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                      width: 500
+                    }
+                  }
+                }}
+              >
+                {allPlants.map(plant => {
+                  return (
+                    <MenuItem key={plant.oid} value={plant.oid}>
+                      {plant.name.replace(/dhiraagu\s*,\s*/gi, "").trim()}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            {intervalSelector}
+            <FormControl disabled={disabled} className={classes.formControl}>
+              <InputLabel shrink htmlFor="datePicker">
+                Reference Date
+              </InputLabel>
+              <DatePicker
+                disabled={disabled}
+                id="datePicker"
+                disableFuture
+                autoOk
+                format="DD MMMM YYYY"
+                returnMoment
+                className={classes.datePicker}
+                value={this.state.referenceDate}
+                onChange={this.handleDateChange}
+                animateYearScrolling={false}
+                leftArrowIcon={<LeftIcon />}
+                rightArrowIcon={<RightIcon />}
+              />
+            </FormControl>
+          </CardContent>
+          <Button
+            disabled={disabled}
+            fab
+            color="primary"
+            aria-label="add"
+            className={classes.downloadButton}
+            onClick={this.onDownloadClick}
+          >
+            <DownloadIcon />
+          </Button>
+        </Card>
         {dataNode}
       </div>
     );
