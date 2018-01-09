@@ -28,7 +28,7 @@ const styles = theme => {
       height: "100%",
       width: DRAWERWIDTH
     },
-    drawerInner: {height: "100vh"},
+    drawerInner: { height: "100vh" },
     drawerHeader: {
       display: "flex",
       alignItems: "center",
@@ -40,23 +40,8 @@ const styles = theme => {
 };
 
 class Sidebar extends React.Component {
-  state = { plants: [] };
-
-  fetch() {
-    fetch("/api/plants")
-      .then(res => res.json())
-      .then(({ payload }) => {
-        this.setState({ plants: payload });
-      });
-  }
-
-  componentWillMount() {
-    this.fetch();
-  }
-
   render() {
-    let { classes, open } = this.props;
-    let { plants } = this.state;
+    let { classes, open, plants } = this.props;
     return (
       <div className={classes.drawerInner}>
         <div className={classes.drawerHeader} />
@@ -94,7 +79,7 @@ class Sidebar extends React.Component {
 
 Sidebar.propTypes = {
   classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired
 };
 
 export default withStyles(styles, { withTheme: true })(Sidebar);

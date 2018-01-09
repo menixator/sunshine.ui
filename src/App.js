@@ -81,7 +81,8 @@ class App extends React.Component {
     open: false,
     connected: false,
     lostConnection: false,
-    title: "Sunshine"
+    title: "Sunshine",
+    sidebarItems: null
   };
 
   unlisten = null;
@@ -97,6 +98,16 @@ class App extends React.Component {
     this.unlisten = history.listen(this.refreshTitle);
 
     this.refreshTitle();
+
+    this.fetchSidebarList();
+  }
+
+  fetchSidebarList() {
+    fetch("/api/plants")
+      .then(res => res.json())
+      .then(({ payload }) => {
+        this.setState({ sidebarItems: payload });
+      });
   }
 
   componentWillUnmount() {
@@ -119,9 +130,13 @@ class App extends React.Component {
 
   render() {
     let { classes } = this.props;
+
+    let {state} = this;
     let { open, connected } = this.state;
 
-    let drawer = <Sidebar />;
+    let drawer = state.sidebarItems && <Sidebar plants={state.sidebarItems} />;
+    let shouldRenderSidebar = connected && state.sidebarItems !== null && state.open;
+
     return (
       <div className={classes.root}>
         <div className={classes.appFrame}>
@@ -137,17 +152,14 @@ class App extends React.Component {
                 onClick={this.handleDrawerToggle}
                 className={classes.navIconHide}
               >
-                {this.state.open ? <HideMenuIcon/> : <MenuIcon />}
+                {this.state.open ? <HideMenuIcon /> : <MenuIcon />}
               </IconButton>
               <Typography type="title" color="inherit" noWrap>
                 {this.state.title}
               </Typography>
-
-
-
             </Toolbar>
           </AppBar>
-          {connected && (
+          {shouldRenderSidebar && (
             <Hidden mdUp>
               <Drawer
                 type="temporary"
@@ -165,20 +177,19 @@ class App extends React.Component {
               </Drawer>
             </Hidden>
           )}
-          {connected &&
-            this.state.open && (
-              <Hidden mdDown implementation="css">
-                <Drawer
-                  type="persistent"
-                  open={this.state.open}
-                  classes={{
-                    paper: classes.drawerPaper
-                  }}
-                >
-                  {drawer}
-                </Drawer>
-              </Hidden>
-            )}
+          {shouldRenderSidebar && (
+            <Hidden mdDown implementation="css">
+              <Drawer
+                type="persistent"
+                open={this.state.open}
+                classes={{
+                  paper: classes.drawerPaper
+                }}
+              >
+                {drawer}
+              </Drawer>
+            </Hidden>
+          )}
           <main className={classes.content}>
             {connected ? (
               AppRoutes
