@@ -34,13 +34,6 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 
 
-.SidebarLink{
-  text-decoration: none;
-};
-
-.SidebarLink:visited{
-  text-decoration: none;
-}
 
 /* SCROLLBARS */
 ::-webkit-scrollbar {

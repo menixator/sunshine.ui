@@ -35,6 +35,12 @@ const styles = theme => {
       justifyContent: "flex-end",
       padding: "0 8px",
       ...theme.mixins.toolbar
+    },
+    sideBarLink: {
+      textDecoration: "none",
+      "&:visited": {
+        textDecoration: "none"
+      }
     }
   };
 };
@@ -49,13 +55,21 @@ class Sidebar extends React.Component {
         <List className={classes.list}>
           <div>
             <Item path="/" primary="Dashboard" icon={<DashboardIcon />} />
-            <Item path="/statistics" primary="Statistics" icon={<ChartIcon />} />
+            <Item
+              path="/statistics"
+              primary="Statistics"
+              icon={<ChartIcon />}
+            />
             <Item
               path="/visualizations"
               primary="Visualizations"
               icon={<VisualizationsIcon />}
             />
-            <Item path="/plants" primary="Plant List" icon={<PlantListIcon />} />
+            <Item
+              path="/plants"
+              primary="Plant List"
+              icon={<PlantListIcon />}
+            />
           </div>
         </List>
         <Divider />
