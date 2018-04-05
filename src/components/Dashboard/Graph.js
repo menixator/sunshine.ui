@@ -17,7 +17,7 @@ import TCLC from "../TCLC";
 import findMeAColor from "../../utils/findMeAColor";
 
 class CustomTooltip extends React.Component {
-  propTypes: {
+  static propTypes = {
     type: PropTypes.string,
     payload: PropTypes.array,
     label: PropTypes.string
@@ -66,7 +66,11 @@ class CustomTooltip extends React.Component {
                 <td />
                 <td>Total</td>
                 <td>
-                  <b>{payload.reduce((val, item) => val + item.value, 0).toFixed(2)}</b>
+                  <b>
+                    {payload
+                      .reduce((val, item) => val + item.value, 0)
+                      .toFixed(2)}
+                  </b>
                 </td>
                 <td>{payload[0].unit}</td>
               </tr>
@@ -92,11 +96,12 @@ class PowerChart extends React.Component {
     fetch(`/api/stats/power/aggregated?timestamp=${timestamp}`)
       .then(res => res.json())
       .then(body => {
-        if (this.state.palette.size < body.payload.plants.length) {
-          while (this.state.palette.size < body.payload.plants.length)
-            findMeAColor(this.state.palette);
-        }
-        this.setState({ data: new Repository(body.payload) });
+        this.setState({
+          data: new Repository(body.payload),
+          ...(this.state.palette.size < body.payload.plants.length
+            ? { palette: findMeAColor(body.payload.plants.length) }
+            : {})
+        });
       });
   }
 
@@ -106,7 +111,10 @@ class PowerChart extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.timestamp !== this.props.timestamp) {
-      if (moment(prevProps.timestamp).date() !== moment(this.props.timestamp).date()) {
+      if (
+        moment(prevProps.timestamp).date() !==
+        moment(this.props.timestamp).date()
+      ) {
         this.setState({ data: null });
       }
 
@@ -126,20 +134,22 @@ class PowerChart extends React.Component {
     // TODO: Loading
     if (data === null) return <TCLC cowSays="Loading graph" />;
 
-    let colors = Array.from(palette.values());
+    let colors = palette;
 
     let usedPlants = new Set();
 
-    let tableData = Array.from(data.dataPool.entries()).map(([timestamp, readings]) => {
-      return {
-        timestamp,
-        ...readings.reduce((obj, reading) => {
-          obj[reading.oid] = reading.value;
-          if (!usedPlants.has(reading.oid)) usedPlants.add(reading.oid);
-          return obj;
-        }, {})
-      };
-    });
+    let tableData = Array.from(data.dataPool.entries()).map(
+      ([timestamp, readings]) => {
+        return {
+          timestamp,
+          ...readings.reduce((obj, reading) => {
+            obj[reading.oid] = reading.value;
+            if (!usedPlants.has(reading.oid)) usedPlants.add(reading.oid);
+            return obj;
+          }, {})
+        };
+      }
+    );
 
     let dataStartedToBeSignificant = false;
 
@@ -153,7 +163,10 @@ class PowerChart extends React.Component {
 
     return (
       <ResponsiveContainer>
-        <BarChart data={tableData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
+        <BarChart
+          data={tableData}
+          margin={{ top: 20, right: 30, left: 10, bottom: 5 }}
+        >
           <XAxis
             dataKey="timestamp"
             tickLine={false}
