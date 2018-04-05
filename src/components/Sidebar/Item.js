@@ -16,7 +16,7 @@ function Item(props) {
       children={({ location, match }) => {
         let isActive = !!match;
         return (
-          <Link className="SidebarLink" to={path}>
+          <Link className={props.className} to={path}>
             <ListItem button selected={isActive}>
               <ListItemIcon>{icon}</ListItemIcon>
               <ListItemText primary={primary} />

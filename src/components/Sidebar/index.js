@@ -54,18 +54,26 @@ class Sidebar extends React.Component {
         <Divider />
         <List className={classes.list}>
           <div>
-            <Item path="/" primary="Dashboard" icon={<DashboardIcon />} />
             <Item
+              className={classes.sideBarLink}
+              path="/"
+              primary="Dashboard"
+              icon={<DashboardIcon />}
+            />
+            <Item
+              className={classes.sideBarLink}
               path="/statistics"
               primary="Statistics"
               icon={<ChartIcon />}
             />
             <Item
+              className={classes.sideBarLink}
               path="/visualizations"
               primary="Visualizations"
               icon={<VisualizationsIcon />}
             />
             <Item
+              className={classes.sideBarLink}
               path="/plants"
               primary="Plant List"
               icon={<PlantListIcon />}
@@ -78,6 +86,7 @@ class Sidebar extends React.Component {
             <ListSubheader>Plants</ListSubheader>
             {plants.map(plant => (
               <Item
+                className={classes.sideBarLink}
                 key={plant.oid}
                 path={`/plants/${plant.oid}`}
                 primary={plant.name.replace(/dhiraagu\s*,\s*/gi, "").trim()}
