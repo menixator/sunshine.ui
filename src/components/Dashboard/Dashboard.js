@@ -335,7 +335,7 @@ class Dashboard extends React.Component {
           <Grid item xs={12} sm={12} md={6} lg={6}>
             <Card>
               <CardHeader
-                title={isRealtime ? "Today's Graph" : "Readings for " + cardTitleDate}
+                title={isRealtime ? "Today's Readings" : "Readings for " + cardTitleDate}
               />
               <CardContent>
                 <div className={classes.plantReadings}>
